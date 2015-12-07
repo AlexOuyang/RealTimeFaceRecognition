@@ -13,6 +13,8 @@ ANGLES_LEFT = np.array([-30, 0, 30])
 ANGLES_RIGHT = np.array([30, 0, -30])
 ANGLES_MIDDLE = np.array([0, -30, 30])
 angles = ANGLES_MIDDLE 
+SKIP_FRAME = 2
+frame_skip_rate = 0 # skip 1 frame every other frame
 SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
 face_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml") #create a cascade classifier
 sideFace_cascade = cv2.CascadeClassifier('../data/haarcascade_profileface.xml')
@@ -49,7 +51,9 @@ while ret:
 
     processed_frame = resized_frame
 
-    if False:
+    # Skip a frame if the no face was found last frame
+    if frame_skip_rate == 0:
+        faceFound = False
         for angle in angles:
             # rotated_frame = rotate_image(resized_frame, angle)
 
@@ -88,7 +92,20 @@ while ret:
                 if angle < 0: angles = ANGLES_LEFT
                 if angle == 0: angles = ANGLES_MIDDLE
 
+                faceFound = True
+
                 break
+
+        if faceFound: 
+            frame_skip_rate = 0
+        else:
+            frame_skip_rate = SKIP_FRAME
+            print "face not found"
+
+    else:
+        frame_skip_rate -= 1
+        print "face not found"
+
 
   
     cv2.putText(processed_frame, "Press ESC or 'q' to quit.", (5, 25),
