@@ -29,6 +29,7 @@ frame_scale = (frame.shape[1]/SCALE_FACTOR,frame.shape[0]/SCALE_FACTOR)  # (y, x
 
 crop_face = []
 
+
 while ret:
 
     # resize the captured frame for face detection to increase processing speed
