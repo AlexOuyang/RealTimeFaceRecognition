@@ -11,15 +11,26 @@ import utils as ut
 
 
 FACE_DIM = (200, 200)
-ANGLES_LEFT = np.array([-30, 0, 30])
-ANGLES_RIGHT = np.array([30, 0, -30])
-ANGLES_MIDDLE = np.array([0, -30, 30])
-angles = ANGLES_MIDDLE 
 SKIP_FRAME = 2      # the fixed skip frame
 frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
 SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
 face_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml") #create a cascade classifier
 sideFace_cascade = cv2.CascadeClassifier('../data/haarcascade_profileface.xml')
+
+# dictionary mapping used to keep track of head rotation maps
+rotation_maps = {
+    "left": np.array([-30, 0, 30]),
+    "right": np.array([30, 0, -30]),
+    "middle": np.array([0, -30, 30]),
+}
+
+def get_rotation_map(rotation):
+    """ Takes in an angle rotation, and returns an optimized rotation map """
+    if rotation > 0: return rotation_maps.get("right", None)
+    if rotation < 0: return rotation_maps.get("left", None)
+    if rotation == 0: return rotation_maps.get("middle", None)
+
+current_rotation_map = get_rotation_map(0) 
 
 
 webcam = cv2.VideoCapture(0)
@@ -41,10 +52,10 @@ while ret:
     # Skip a frame if the no face was found last frame
     if frame_skip_rate == 0:
         faceFound = False
-        for angle in angles:
-            # rotated_frame = ut.rotate_image(resized_frame, angle)
+        for rotation in current_rotation_map:
+            # rotated_frame = ut.rotate_image(resized_frame, rotation)
 
-            rotated_frame = ndimage.rotate(resized_frame, angle)
+            rotated_frame = ndimage.rotate(resized_frame, rotation)
 
             gray = cv2.cvtColor(rotated_frame, cv2.COLOR_BGR2GRAY)
 
@@ -58,7 +69,13 @@ while ret:
             ) 
 
             # If frontal face detector failed, use profileface detector
-            faces = faces if len(faces) else sideFace_cascade.detectMultiScale(gray)
+            faces = faces if len(faces) else sideFace_cascade.detectMultiScale(                
+                gray,
+                scaleFactor=1.3,
+                minNeighbors=5,
+                minSize=(30, 30),
+                flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+            )
 
             # for f in faces:
             #     x, y, w, h = [ v*SCALE_FACTOR for v in f ] # scale the bounding box back to original frame size
@@ -74,12 +91,10 @@ while ret:
                     cv2.putText(rotated_frame, "DumbAss", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0))
 
                 # rotate the frame back and trim the black paddings
-                processed_frame = ut.trim(ut.rotate_image(rotated_frame, angle * (-1)), frame_scale)
+                processed_frame = ut.trim(ut.rotate_image(rotated_frame, rotation * (-1)), frame_scale)
 
-                # reset the optmized angles array
-                if angle > 0: angles = ANGLES_RIGHT
-                if angle < 0: angles = ANGLES_LEFT
-                if angle == 0: angles = ANGLES_MIDDLE
+                # reset the optmized rotation map
+                current_rotation_map = get_rotation_map(rotation)
 
                 faceFound = True
 
@@ -106,10 +121,6 @@ while ret:
 
     if len(crop_face):
         cv2.imshow("Face", crop_face)
-
-    # rotate ANGLES to adapt the camera to the user rotated angle
-    # ANGLES = np.roll(ANGLES, np.where(ANGLES==angle)[0])
-
 
     # get next frame
     ret, frame = webcam.read()
