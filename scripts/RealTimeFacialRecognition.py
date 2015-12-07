@@ -5,43 +5,29 @@ Real time facial tracking and recognition using harr cascade and neural network
 
 import cv2
 import numpy as np
-from math import sin, cos, radians
 from scipy import ndimage
 
+import utils as ut
 
+
+FACE_DIM = (200, 200)
 ANGLES_LEFT = np.array([-30, 0, 30])
 ANGLES_RIGHT = np.array([30, 0, -30])
 ANGLES_MIDDLE = np.array([0, -30, 30])
 angles = ANGLES_MIDDLE 
-SKIP_FRAME = 2
-frame_skip_rate = 0 # skip 1 frame every other frame
+SKIP_FRAME = 2      # the fixed skip frame
+frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
 SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
 face_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml") #create a cascade classifier
 sideFace_cascade = cv2.CascadeClassifier('../data/haarcascade_profileface.xml')
 
 
-def rotate_image(image, angle, scale = 1.0):
-    """ returns an rotated image with the same dimensions """
-    if angle == 0: return image
-    h, w = image.shape[:2]
-    rot_mat = cv2.getRotationMatrix2D((w/2, h/2), angle, scale)
-    return cv2.warpAffine(image, rot_mat, (w, h), flags=cv2.INTER_LINEAR)
-
-def trim(img, dim):
-    """ dim = (y, x),  img.shape = (x, y) retruns a trimmed image with black paddings removed"""
-    # if the img has the same dimension then do nothing
-    if img.shape[0] == dim[1] and img.shape[1] == dim[0]: return img
-    x = int((img.shape[0] - dim[1])/2) + 1
-    y = int((img.shape[1] - dim[0])/2) + 1
-    trimmed_img = img[x: x + dim[1], y: y + dim[0]]   # crop the image
-    return trimmed_img
-
-
 webcam = cv2.VideoCapture(0)
-cv2.namedWindow("Real Time Facial Recognition")
 
 ret, frame = webcam.read() # get first frame
 frame_scale = (frame.shape[1]/SCALE_FACTOR,frame.shape[0]/SCALE_FACTOR)  # (y, x)
+
+crop_face = []
 
 while ret:
 
@@ -55,7 +41,7 @@ while ret:
     if frame_skip_rate == 0:
         faceFound = False
         for angle in angles:
-            # rotated_frame = rotate_image(resized_frame, angle)
+            # rotated_frame = ut.rotate_image(resized_frame, angle)
 
             rotated_frame = ndimage.rotate(resized_frame, angle)
 
@@ -81,11 +67,13 @@ while ret:
             if len(faces):
                 for f in faces:
                     x, y, w, h = [ v for v in f ] # scale the bounding box back to original frame size
+                    crop_face = rotated_frame[y: y + h, x: x + w]   # img[y: y + h, x: x + w]
+                    crop_face = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
                     cv2.rectangle(rotated_frame, (x,y), (x+w,y+h), (0,255,0))
                     cv2.putText(rotated_frame, "DumbAss", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0))
 
                 # rotate the frame back and trim the black paddings
-                processed_frame = trim(rotate_image(rotated_frame, angle * (-1)), frame_scale)
+                processed_frame = ut.trim(ut.rotate_image(rotated_frame, angle * (-1)), frame_scale)
 
                 # reset the optmized angles array
                 if angle > 0: angles = ANGLES_RIGHT
@@ -94,24 +82,29 @@ while ret:
 
                 faceFound = True
 
+
                 break
 
         if faceFound: 
             frame_skip_rate = 0
+            print "Face Found"
         else:
             frame_skip_rate = SKIP_FRAME
-            print "face not found"
+            print "Face Not Found"
 
     else:
         frame_skip_rate -= 1
-        print "face not found"
+        print "Face Not Found"
 
 
   
-    cv2.putText(processed_frame, "Press ESC or 'q' to quit.", (5, 25),
-            cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255))
+    cv2.putText(processed_frame, "Press ESC or 'q' to quit.", (5, 15),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255))
 
     cv2.imshow("Real Time Facial Recognition", processed_frame)
+
+    if len(crop_face):
+        cv2.imshow("Face", crop_face)
 
     # rotate ANGLES to adapt the camera to the user rotated angle
     # ANGLES = np.roll(ANGLES, np.where(ANGLES==angle)[0])
