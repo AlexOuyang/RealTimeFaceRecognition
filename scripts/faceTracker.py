@@ -4,7 +4,8 @@ import sys
 SCALE_FACTOR = 4
 # cascPath = sys.argv[1]
 # face_cascade = cv2.CascadeClassifier(cascPath)
-face_cascade = cv2.CascadeClassifier('../data/haarcascade_frontalface_default.xml')
+# face_cascade = cv2.CascadeClassifier('../data/haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier('../data/haarcascade_profileface.xml')
 
 video_capture = cv2.VideoCapture(0)
 
