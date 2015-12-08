@@ -132,7 +132,7 @@ while ret:
 
 
     if len(crop_face):
-        cv2.imshow("Face", crop_face)
+        cv2.imshow("Cropped Face", cv2.cvtColor(crop_face, cv2.COLOR_BGR2GRAY))
         if num_of_face_saved < num_of_face_to_collect and key == ord('p'):
             face_to_save = cv2.resize(crop_face, (50, 50), interpolation = cv2.INTER_AREA)
             cv2.imwrite(directory_to_save+str(num_of_face_saved)+".png", face_to_save)

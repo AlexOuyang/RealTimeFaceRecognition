@@ -55,10 +55,10 @@ def load_Yale_Exteded_Database(number_of_Faces):
             target_names.append(name)
 
 
-IMAGE_DIM = (50,50) # h = 50, w = 50
+FACE_DIM = (50,50) # h = 50, w = 50
 
-# target_names = ["Alex"]
-target_names = []
+target_names = ["Alex"]
+# target_names = []
 
 # load YaleDatabaseB
 load_Yale_Exteded_Database(39)
@@ -71,15 +71,15 @@ face_data, face_target = ut.load_data(target_names, data_directory = "../face_da
 print face_target.shape[0], " samples from ", len(target_names), " people are loaded"
 for i in range(1,2): print ("\n")
 
-# clf = svm.build_SVC(face_data, face_target, IMAGE_DIM)
-clf, pca = svm.test_SVM(face_data, face_target, IMAGE_DIM, target_names)
+# clf = svm.build_SVC(face_data, face_target, FACE_DIM)
+clf, pca = svm.test_SVM(face_data, face_target, FACE_DIM, target_names)
 
 
 ###############################################################################
 # Facial Recognition and Tracking Live
 
 
-FACE_DIM = (200, 200)
+DISPLAY_FACE_DIM = (200, 200)
 SKIP_FRAME = 2      # the fixed skip frame
 frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
 SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
@@ -157,10 +157,10 @@ while ret:
                     # Crop out the face
                     x, y, w, h = [ v for v in f ] # scale the bounding box back to original frame size
                     crop_face = rotated_frame[y: y + h, x: x + w]   # img[y: y + h, x: x + w]
-                    crop_face = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
+                    crop_face = cv2.resize(crop_face, DISPLAY_FACE_DIM, interpolation = cv2.INTER_AREA)
 
                     # Name Prediction
-                    face_to_predict = cv2.resize(crop_face, IMAGE_DIM, interpolation = cv2.INTER_AREA)
+                    face_to_predict = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
                     face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
                     face_to_predict = face_to_predict.ravel()
                     name_to_display = svm.predict(clf, pca, face_to_predict, target_names)
@@ -200,8 +200,8 @@ while ret:
 
 
     if len(crop_face):
-        cv2.imshow("Face", cv2.cvtColor(crop_face, cv2.COLOR_BGR2GRAY))
-        # face_to_predict = cv2.resize(crop_face, IMAGE_DIM, interpolation = cv2.INTER_AREA)
+        cv2.imshow("Cropped Face", cv2.cvtColor(crop_face, cv2.COLOR_BGR2GRAY))
+        # face_to_predict = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
         # face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
         # name_to_display = svm.predict(clf, pca, face_to_predict, target_names)
     # get next frame
