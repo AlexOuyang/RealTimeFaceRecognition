@@ -1,9 +1,6 @@
 # RealTimeFacialRecognition
 
-
-====================================================
     Faces recognition and detection using OpenCV 
-====================================================
 
 The dataset used is the Extended Yale Database B Cropped
 
