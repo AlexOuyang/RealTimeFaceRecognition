@@ -45,3 +45,6 @@ _ReSharper*/
 
 # Pictures
 /face_data/*
+*.png
+*.pgm
+*.jpg
