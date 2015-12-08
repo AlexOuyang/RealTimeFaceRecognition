@@ -12,6 +12,9 @@ Summary:
         Real time facial tracking and recognition using harrcascade 
         and SVM
 
+To Ignore Warnings: 
+        python -W ignore main.py
+
         Created by:  Chenxing Ouyang
 
 """
@@ -28,8 +31,10 @@ import matplotlib.pyplot as plt
 import utils as ut
 import svm
 
-print(__doc__)
+import warnings
 
+
+print(__doc__)
 
 ###############################################################################
 # Building SVC from database
@@ -53,9 +58,10 @@ def load_Yale_Exteded_Database(number_of_Faces):
 IMAGE_DIM = (50,50) # h = 50, w = 50
 
 target_names = ["Alex"]
+# target_names = []
 
 # load YaleDatabaseB
-load_Yale_Exteded_Database(10)
+load_Yale_Exteded_Database(39)
 
 # print target_names
 
@@ -176,15 +182,14 @@ while ret:
 
         if faceFound: 
             frame_skip_rate = 0
-            print "Face Found"
+            # print "Face Found"
         else:
             frame_skip_rate = SKIP_FRAME
-            print "Face Not Found"
+            # print "Face Not Found"
 
     else:
         frame_skip_rate -= 1
-        print "Face Not Found"
-
+        # print "Face Not Found"
 
   
     cv2.putText(processed_frame, "Press ESC or 'q' to quit.", (5, 15),

@@ -76,6 +76,13 @@ def errorRate(pred, actual):
   error_rate = np.count_nonzero(pred - actual)/float(pred.shape[0])
   return error_rate
 
+def recognitionRate(pred, actual):
+  """ Returns the error rate """
+  if pred.shape != actual.shape: return None
+  error_rate = np.count_nonzero(pred - actual)/float(pred.shape[0])
+  recognitionRate = 1.0 - error_rate
+  return recognitionRate, error_rate
+
 
 def load_data(target_names, data_directory):
   """ Takes in a list of target_names (names of the directory that contains face pics)

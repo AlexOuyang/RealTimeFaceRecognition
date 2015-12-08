@@ -10,8 +10,12 @@ import os
 import numpy as np
 from scipy import ndimage
 from time import time
+import warnings
 
-from sklearn.cross_validation import train_test_split
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from sklearn.cross_validation import train_test_split
+
 from sklearn.datasets import fetch_lfw_people
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import classification_report
@@ -58,16 +62,40 @@ def test_SVM(face_data, face_target, img_dim, target_names):
     print("\nFitting the classifier to the training set")
     param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
                   'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
-    clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+    # clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+    # Train_pca Test Error Rate:  0.0670016750419
+    # Train_pca Test Recognition Rate:  0.932998324958
+
+
+
+    # clf = SVC(kernel='linear', C=1)
+    # 2387  samples from  37  people are loaded
+    # Extracting the top 150 eigenfaces from 1790 faces
+    # Train_pca Test Error Rate:  0.0904522613065
+    # Train_pca Test Recognition Rate:  0.909547738693
+
+    # clf = SVC(kernel='poly')
+    # Train_pca Test Error Rate:  0.201005025126
+    # Train_pca Test Recognition Rate:  0.798994974874
+
+
+    # clf = SVC(kernel='rbf').fit(X_train, y_train)
+    # Train_pca Test Error Rate:  0.0619765494137
+    # Train_pca Test Recognition Rate:  0.938023450586
+
+
+
     # Best Estimator found:
-    # bestEstimatorFound = SVC(C=1000.0, cache_size=200, class_weight='balanced', coef0=0.0,
-    #   decision_function_shape=None, degree=3, gamma=0.001, kernel='rbf',
-    #   max_iter=-1, probability=False, random_state=None, shrinking=True,
-    #   tol=0.001, verbose=False)
+    clf = SVC(C=1000.0, cache_size=200, class_weight='balanced', coef0=0.0,
+  decision_function_shape=None, degree=3, gamma=0.0001, kernel='rbf',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+    # Train_pca with Alex Test Error Rate:  0.088424437299
+    # Train_pca with Alex Test Recognition Rate:  0.911575562701
 
     clf = clf.fit(X_train_pca, y_train)
-    print("\nBest estimator found by grid search:")
-    print(clf.best_estimator_)
+    # print("\nBest estimator found by grid search:")
+    # print(clf.best_estimator_)
 
     ###############################################################################
     # Quantitative evaluation of the model quality on the test set
@@ -76,6 +104,7 @@ def test_SVM(face_data, face_target, img_dim, target_names):
     # print "predicated names: ", y_pred
     # print "actual names: ", y_test
     print "Test Error Rate: ", ut.errorRate(y_pred, y_test)
+    print "Test Recognition Rate: ", 1.0-ut.errorRate(y_pred, y_test)
 
     ###############################################################################
     # Testing
@@ -136,16 +165,12 @@ def build_SVC(face_data, face_target, img_dim):
     print("\nFitting the classifier to the training set")
     param_grid = {'C': [1e3, 5e3, 1e4, 5e4, 1e5],
                   'gamma': [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.1], }
-    clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
+    # clf = GridSearchCV(SVC(kernel='rbf', class_weight='balanced'), param_grid)
     # Best Estimator found:
-    # bestEstimatorFound = SVC(C=1000.0, cache_size=200, class_weight='balanced', coef0=0.0,
-    #   decision_function_shape=None, degree=3, gamma=0.001, kernel='rbf',
-    #   max_iter=-1, probability=False, random_state=None, shrinking=True,
-    #   tol=0.001, verbose=False)
-
-    clf = clf.fit(X_train_pca, y_train)
-    print("\nBest estimator found by grid search:")
-    print(clf.best_estimator_)
+    clf = SVC(C=1000.0, cache_size=200, class_weight='balanced', coef0=0.0,
+    decision_function_shape=None, degree=3, gamma=0.0001, kernel='rbf',
+    max_iter=-1, probability=False, random_state=None, shrinking=True,
+    tol=0.001, verbose=False).fit(X_train_pca, y_train)
 
 
     # Quantitative evaluation of the model quality on the test set
