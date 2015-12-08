@@ -1,76 +1,17 @@
-""" 
-====================================================
-    Faces recognition and detection using OpenCV 
-====================================================
+"""
+Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
 
-The dataset used is the Extended Yale Database B
+This file is part of Cogs 109 Project.
 
-  http://vision.ucsd.edu/~leekc/ExtYaleDatabase/ExtYaleB.html
-
-
-Summary:
-        Real time facial tracking and recognition using harrcascade 
-        and SVM
-
-        Created by:  Chenxing Ouyang
+Summary: Used for data colelction and SVM training
 
 """
 
 import cv2
-import os
 import numpy as np
 from scipy import ndimage
-from time import time
-import logging
-import matplotlib.pyplot as plt
-
 
 import utils as ut
-import svm
-
-print(__doc__)
-
-
-###############################################################################
-# Building SVC from database
-
-# Used to load data bases
-def load_Yale_Exteded_Database(number_of_Faces):
-    for i in range (1, number_of_Faces):
-        missing_database = [14]
-        name_prefix = "yaleB"
-        if i < 10:
-            name_index = "0" + str(i)
-        else:
-            name_index = str(i)
-        name = name_prefix + name_index
-        if i in missing_database:
-            print "Missing Database: ", name
-        else:
-            target_names.append(name)
-
-
-IMAGE_DIM = (50,50) # h = 50, w = 50
-
-target_names = ["Alex"]
-
-# load YaleDatabaseB
-load_Yale_Exteded_Database(10)
-
-# print target_names
-
-# Build the classifier
-face_data, face_target = ut.load_data(target_names, data_directory = "../face_data/")
-
-print face_target.shape[0], " samples from ", len(target_names), " people are loaded"
-for i in range(1,2): print ("\n")
-
-# clf = svm.build_SVC(face_data, face_target, IMAGE_DIM)
-clf, pca = svm.test_SVM(face_data, face_target, IMAGE_DIM, target_names)
-
-
-###############################################################################
-# Facial Recognition and Tracking Live
 
 
 FACE_DIM = (200, 200)
@@ -103,6 +44,11 @@ frame_scale = (frame.shape[1]/SCALE_FACTOR,frame.shape[0]/SCALE_FACTOR)  # (y, x
 
 crop_face = []
 num_of_face_saved = 0
+
+#  For saving face data to directory
+num_of_face_to_collect = 100
+directory_to_save = "../face_data/Other/"
+ut.delete_files(directory_to_save) # Delete all the pictures before recording new
 
 
 while ret:
@@ -148,20 +94,11 @@ while ret:
 
             if len(faces):
                 for f in faces:
-                    # Crop out the face
                     x, y, w, h = [ v for v in f ] # scale the bounding box back to original frame size
                     crop_face = rotated_frame[y: y + h, x: x + w]   # img[y: y + h, x: x + w]
                     crop_face = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
-
-                    # Name Prediction
-                    face_to_predict = cv2.resize(crop_face, IMAGE_DIM, interpolation = cv2.INTER_AREA)
-                    face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
-                    face_to_predict = face_to_predict.ravel()
-                    name_to_display = svm.predict(clf, pca, face_to_predict, target_names)
-
-                    # Display frame
                     cv2.rectangle(rotated_frame, (x,y), (x+w,y+h), (0,255,0))
-                    cv2.putText(rotated_frame, name_to_display, (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0))
+                    cv2.putText(rotated_frame, "DumbAss", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0))
 
                 # rotate the frame back and trim the black paddings
                 processed_frame = ut.trim(ut.rotate_image(rotated_frame, rotation * (-1)), frame_scale)
@@ -196,14 +133,14 @@ while ret:
 
     if len(crop_face):
         cv2.imshow("Face", crop_face)
-        # face_to_predict = cv2.resize(crop_face, IMAGE_DIM, interpolation = cv2.INTER_AREA)
-        # face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
-        # name_to_display = svm.predict(clf, pca, face_to_predict, target_names)
+        if num_of_face_saved < num_of_face_to_collect and key == ord('p'):
+            face_to_save = cv2.resize(crop_face, (50, 50), interpolation = cv2.INTER_AREA)
+            cv2.imwrite(directory_to_save+str(num_of_face_saved)+".png", face_to_save)
+            num_of_face_saved += 1
+
     # get next frame
     ret, frame = webcam.read()
 
 
 webcam.release()
 cv2.destroyAllWindows()
-
-

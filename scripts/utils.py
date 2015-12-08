@@ -96,3 +96,4 @@ def load_data(target_names, data_directory):
     Y_mat = np.append(Y_mat, tempY)
     print "    ", directory_name, i
   return X_mat, Y_mat
+
