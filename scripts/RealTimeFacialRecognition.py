@@ -39,21 +39,27 @@ ret, frame = webcam.read() # get first frame
 frame_scale = (frame.shape[1]/SCALE_FACTOR,frame.shape[0]/SCALE_FACTOR)  # (y, x)
 
 crop_face = []
+num_of_face_saved = 0
+
+#  For saving face data to directory
+num_of_face_to_collect = 100
+directory_to_save = "../pics/Other/"
+ut.delete_files(directory_to_save) # Delete all the pictures before recording new
 
 
 while ret:
-
+    key = cv2.waitKey(1)
+    # exit on 'q' 'esc' 'Q'
+    if key in [27, ord('Q'), ord('q')]: 
+        break
     # resize the captured frame for face detection to increase processing speed
-
     resized_frame = cv2.resize(frame, frame_scale)
 
     processed_frame = resized_frame
-
     # Skip a frame if the no face was found last frame
     if frame_skip_rate == 0:
         faceFound = False
         for rotation in current_rotation_map:
-            # rotated_frame = ut.rotate_image(resized_frame, rotation)
 
             rotated_frame = ndimage.rotate(resized_frame, rotation)
 
@@ -119,16 +125,18 @@ while ret:
 
     cv2.imshow("Real Time Facial Recognition", processed_frame)
 
+
+
     if len(crop_face):
         cv2.imshow("Face", crop_face)
+        if num_of_face_saved < num_of_face_to_collect and key == ord('p'):
+            face_to_save = cv2.resize(crop_face, (50, 50), interpolation = cv2.INTER_AREA)
+            cv2.imwrite(directory_to_save+str(num_of_face_saved)+".png", face_to_save)
+            num_of_face_saved += 1
 
     # get next frame
     ret, frame = webcam.read()
 
-    key = cv2.waitKey(1)
-    # exit on 'q' 'esc' 'Q'
-    if key in [27, ord('Q'), ord('q')]: 
-        break
 
 webcam.release()
 cv2.destroyAllWindows()

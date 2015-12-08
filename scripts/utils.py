@@ -1,7 +1,10 @@
 import cv2
 import numpy as np
 from scipy import ndimage
+import os
 
+###############################################################################
+# Used For Facking Tracking in OpenCV
 
 def rotate_image(image, angle, scale = 1.0):
     """ returns an rotated image with the same dimensions """
@@ -19,3 +22,67 @@ def trim(img, dim):
     trimmed_img = img[x: x + dim[1], y: y + dim[0]]   # crop the image
     return trimmed_img
 
+def delete_files(directory = "../pics"):
+    """ Deletes all files and folders contained in the directory """
+    for the_file in os.listdir(directory):
+        file_path = os.path.join(directory, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception, e:
+            print e
+
+
+
+
+###############################################################################
+# Used for Facial Recognition in SVM
+
+def readImage(directory, y, dim = (50, 50)):
+  """ Takes in a directory of images
+      Returns X_data = (numOfFace X ImgPixelSize) face data array 
+              Y_data = (numOfFace X 1) target_name_index array
+  """
+  X_data = np.array([])
+  index = 0
+  for the_file in os.listdir(directory):
+    file_path = os.path.join(directory, the_file)
+    if file_path.endswith(".png") or file_path.endswith(".jpg") or file_path.endswith(".pgm"):
+      img = cv2.imread(file_path, 0)
+      img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+      img_data = img.ravel()
+      X_data = img_data if not X_data.shape[0] else np.vstack((X_data,img_data))
+      index += 1
+
+  Y_data = np.empty(index, dtype = int)
+  Y_data.fill(y)
+  return X_data, Y_data
+
+
+def errorRate(pred, actual):
+  """ Returns the error rate """
+  if pred.shape != actual.shape: return None
+  error_rate = np.count_nonzero(pred - actual)/float(pred.shape[0])
+  return error_rate
+
+
+def load_data(target_names, data_directory):
+  """ Takes in a list of target_names (names of the directory that contains face pics)
+      Retruns X_mat = (numbeOfFace X numberOfPixel) face data matrix 
+              Y_mat = (numbeOfFace X 1) target_name_index matrix
+  """
+  if len(target_names) < 2: return None
+  first_data = str(target_names[0])
+  X1, y1 = readImage(os.path.join(data_directory, first_data), 0)
+  X_mat = X1
+  Y_mat = y1
+  print "Loading Database: "
+  for i in range(1, len(target_names)):
+    directory_name = str(target_names[i])
+    directory_path = os.path.join(data_directory, directory_name)
+    tempX, tempY = readImage(directory_path, i)
+    X_mat = np.concatenate((X_mat, tempX), axis=0)
+    Y_mat = np.append(Y_mat, tempY)
+    print "    ", directory_name, i
+  return X_mat, Y_mat
