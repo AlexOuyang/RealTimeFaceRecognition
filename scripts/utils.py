@@ -77,7 +77,7 @@ def errorRate(pred, actual):
   return error_rate
 
 def recognitionRate(pred, actual):
-  """ Returns the error rate """
+  """ Returns the recognition rate and error rate """
   if pred.shape != actual.shape: return None
   error_rate = np.count_nonzero(pred - actual)/float(pred.shape[0])
   recognitionRate = 1.0 - error_rate

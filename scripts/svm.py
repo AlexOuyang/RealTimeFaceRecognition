@@ -26,11 +26,11 @@ from sklearn.svm import SVC
 import utils as ut
 
 
-def test_SVM(face_data, face_target, img_dim, target_names):
+def test_SVM(face_data, face_target, face_dim, target_names):
     """ Testing SVM
 
         Build SVM classification modle using the face_data matrix (numOfFace X numOfPixel)
-        and face_target array, img_dim is a tuple of the dimension of each image(h,w)
+        and face_target array, face_dim is a tuple of the dimension of each image(h,w)
         Returns the SVM classification modle
     """
     X = face_data
@@ -45,12 +45,12 @@ def test_SVM(face_data, face_target, img_dim, target_names):
     print("\nExtracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0]))
 
     pca = RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
-    eigenfaces = pca.components_.reshape((n_components, img_dim[0], img_dim[1]))
+    eigenfaces = pca.components_.reshape((n_components, face_dim[0], face_dim[1]))
 
     # This portion of the code is used if the data is scarce, it uses the number 
     # of imputs as the number of features
     # pca = RandomizedPCA(n_components=None, whiten=True).fit(X_train)
-    # eigenfaces = pca.components_.reshape((pca.components_.shape[0], img_dim[0], img_dim[1]))
+    # eigenfaces = pca.components_.reshape((pca.components_.shape[0], face_dim[0], face_dim[1]))
 
     print("\nProjecting the input data on the eigenfaces orthonormal basis")
     t0 = time()
@@ -110,15 +110,12 @@ def test_SVM(face_data, face_target, img_dim, target_names):
     # Testing
 
     X_test_pic1 = X_test[0]
-    X_test_pic1_for_display = np.reshape(X_test_pic1, img_dim)
+    X_test_pic1_for_display = np.reshape(X_test_pic1, face_dim)
 
     t0 = time()
     pic1_pred_name = predict(clf, pca, X_test_pic1, target_names)
     print("\nPrediction took %0.3fs" % (time() - t0))
-
-
-    for i in range(1,3): print ("\n")
-    print "Testing picture_1 name: ", pic1_pred_name
+    print "\nPredicated result for picture_1 name: ", pic1_pred_name
     for i in range(1,3): print ("\n")
 
     # Display the picture
@@ -128,12 +125,49 @@ def test_SVM(face_data, face_target, img_dim, target_names):
     # plt.imshow(X_test_pic1_for_display)
     # plt.show()
 
+
+    ###############################################################################
+    # Qualitative evaluation of the predictions using matplotlib
+    # import matplotlib.pyplot as plt
+
+    # def plot_gallery(images, titles, face_dim, n_row=3, n_col=4):
+    #     """Helper function to plot a gallery of portraits"""
+    #     plt.figure(figsize=(1.8 * n_col, 2.4 * n_row))
+    #     plt.subplots_adjust(bottom=0, left=.01, right=.99, top=.90, hspace=.35)
+    #     for i in range(n_row * n_col):
+    #         plt.subplot(n_row, n_col, i + 1)
+    #         plt.imshow(images[i].reshape(face_dim), cmap=plt.cm.gray)
+    #         plt.title(titles[i], size=12)
+    #         plt.xticks(())
+    #         plt.yticks(())
+
+
+    # # plot the result of the prediction on a portion of the test set
+
+    # def title(y_pred, y_test, target_names, i):
+    #     pred_name = target_names[y_pred[i]].rsplit(' ', 1)[-1]
+    #     true_name = target_names[y_test[i]].rsplit(' ', 1)[-1]
+    #     return 'predicted: %s\ntrue:      %s' % (pred_name, true_name)
+
+    # prediction_titles = [title(y_pred, y_test, target_names, i)
+    #                      for i in range(y_pred.shape[0])]
+
+    # plot_gallery(X_test, prediction_titles, face_dim)
+
+    # # plot the gallery of the most significative eigenfaces
+
+    # eigenface_titles = ["eigenface %d" % i for i in range(eigenfaces.shape[0])]
+    # plot_gallery(eigenfaces, eigenface_titles, face_dim)
+
+    # plt.show()
+
+
     return clf, pca
 
 
-def build_SVC(face_data, face_target, img_dim):
+def build_SVC(face_data, face_target, face_dim):
     """ Build SVM classification modle using the face_data matrix (numOfFace X numOfPixel)
-        and face_target array, img_dim is a tuple of the dimension of each image(h,w)
+        and face_target array, face_dim is a tuple of the dimension of each image(h,w)
         Returns the SVM classification modle
     """
     X = face_data
@@ -148,12 +182,12 @@ def build_SVC(face_data, face_target, img_dim):
     print("\nExtracting the top %d eigenfaces from %d faces" % (n_components, X_train.shape[0]))
 
     pca = RandomizedPCA(n_components=n_components, whiten=True).fit(X_train)
-    eigenfaces = pca.components_.reshape((n_components, img_dim[0], img_dim[1]))
+    eigenfaces = pca.components_.reshape((n_components, face_dim[0], face_dim[1]))
 
     # This portion of the code is used if the data is scarce, it uses the number 
     # of imputs as the number of features
     # pca = RandomizedPCA(n_components=None, whiten=True).fit(X_train)
-    # eigenfaces = pca.components_.reshape((pca.components_.shape[0], img_dim[0], img_dim[1]))
+    # eigenfaces = pca.components_.reshape((pca.components_.shape[0], face_dim[0], face_dim[1]))
 
     print("\nProjecting the input data on the eigenfaces orthonormal basis")
     t0 = time()

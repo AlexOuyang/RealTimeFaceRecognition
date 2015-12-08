@@ -3,7 +3,7 @@
     Faces recognition and detection using OpenCV 
 ====================================================
 
-The dataset used is the Extended Yale Database B
+The dataset used is the Extended Yale Database B Cropped
 
   http://vision.ucsd.edu/~leekc/ExtYaleDatabase/ExtYaleB.html
 
@@ -57,8 +57,8 @@ def load_Yale_Exteded_Database(number_of_Faces):
 
 IMAGE_DIM = (50,50) # h = 50, w = 50
 
-target_names = ["Alex"]
-# target_names = []
+# target_names = ["Alex"]
+target_names = []
 
 # load YaleDatabaseB
 load_Yale_Exteded_Database(39)
@@ -200,7 +200,7 @@ while ret:
 
 
     if len(crop_face):
-        cv2.imshow("Face", crop_face)
+        cv2.imshow("Face", cv2.cvtColor(crop_face, cv2.COLOR_BGR2GRAY))
         # face_to_predict = cv2.resize(crop_face, IMAGE_DIM, interpolation = cv2.INTER_AREA)
         # face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
         # name_to_display = svm.predict(clf, pca, face_to_predict, target_names)
