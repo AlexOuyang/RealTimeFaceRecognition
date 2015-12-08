@@ -60,7 +60,7 @@ load_Yale_Exteded_Database(10)
 # print target_names
 
 # Build the classifier
-face_data, face_target = ut.load_data(target_names, data_directory = "../face_data/")
+face_data, face_target = ut.load_data(target_names, data_directory = "../../../face_data/")
 
 print face_target.shape[0], " samples from ", len(target_names), " people are loaded"
 for i in range(1,2): print ("\n")

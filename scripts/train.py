@@ -47,7 +47,7 @@ num_of_face_saved = 0
 
 #  For saving face data to directory
 num_of_face_to_collect = 100
-directory_to_save = "../face_data/Other/"
+directory_to_save = "../../../face_data/Other/"
 ut.delete_files(directory_to_save) # Delete all the pictures before recording new
 
 
