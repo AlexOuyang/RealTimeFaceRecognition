@@ -1,7 +1,6 @@
 # RealTimeFacialRecognition
 
-Summary: Real time facial tracking and recognition using 
-        harrcascade and SVM(Radial Basis Function Kernal)
+Summary: Real time facial tracking and recognition using harrcascade and SVM(Radial Basis Function Kernal). Designed SVM classification model (radial basis functional kernel) using cross-validation and grid search, implemented using scikit in python, and trained on Extended Yale Database B. Achieved facial Tracking in OpenCV and optimized Harrcascade to detect up to 45 degrees head tilting.
 
 
 The dataset used is the Extended Yale Database B Cropped
