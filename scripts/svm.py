@@ -85,7 +85,7 @@ def test_SVM(face_data, face_target, face_dim, target_names):
 
 
 
-    # Best Estimator found:
+    # Best Estimator found using Radial Basis Function Kernal:
     clf = SVC(C=1000.0, cache_size=200, class_weight='balanced', coef0=0.0,
   decision_function_shape=None, degree=3, gamma=0.0001, kernel='rbf',
   max_iter=-1, probability=False, random_state=None, shrinking=True,
