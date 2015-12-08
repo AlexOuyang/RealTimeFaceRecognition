@@ -1,5 +1,9 @@
 """
-Real time facial tracking and recognition using harr cascade and neural network
+Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
+
+This file is part of Cogs 109 Project.
+
+Summary: Real time facial tracking and recognition using harr cascade and neural network
 
 """
 

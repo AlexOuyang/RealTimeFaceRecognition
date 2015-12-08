@@ -1,10 +1,20 @@
+"""
+Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
+
+This file is part of Cogs 109 Project.
+
+Summary: Utilties used for facial tracking in OpenCV and facial recognition in SVM
+
+"""
+
+
 import cv2
 import numpy as np
 from scipy import ndimage
 import os
 
 ###############################################################################
-# Used For Facking Tracking in OpenCV
+# Used For Facial Tracking in OpenCV
 
 def rotate_image(image, angle, scale = 1.0):
     """ returns an rotated image with the same dimensions """
