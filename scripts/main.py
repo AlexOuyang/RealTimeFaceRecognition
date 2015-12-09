@@ -57,7 +57,7 @@ def load_Yale_Exteded_Database(number_of_Faces):
 
 FACE_DIM = (50,50) # h = 50, w = 50
 
-target_names = ["Alex"]
+target_names = ["Alex02", "Kristine"]
 # target_names = []
 
 # load YaleDatabaseB
@@ -82,7 +82,7 @@ clf, pca = svm.test_SVM(face_data, face_target, FACE_DIM, target_names)
 DISPLAY_FACE_DIM = (200, 200)
 SKIP_FRAME = 2      # the fixed skip frame
 frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
-SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
+SCALE_FACTOR = 2 # used to resize the captured frame for face detection for faster processing speed
 face_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml") #create a cascade classifier
 sideFace_cascade = cv2.CascadeClassifier('../data/haarcascade_profileface.xml')
 

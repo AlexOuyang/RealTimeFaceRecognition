@@ -12,9 +12,11 @@ import cv2
 import numpy as np
 from scipy import ndimage
 import os
+import errno
+
 
 ###############################################################################
-# Used For Facial Tracking in OpenCV
+# Used For Facial Tracking and Traning in OpenCV
 
 def rotate_image(image, angle, scale = 1.0):
     """ returns an rotated image with the same dimensions """
@@ -32,7 +34,7 @@ def trim(img, dim):
     trimmed_img = img[x: x + dim[1], y: y + dim[0]]   # crop the image
     return trimmed_img
 
-def delete_files(directory = "../pics"):
+def clean_directory(directory = "../pics"):
     """ Deletes all files and folders contained in the directory """
     for the_file in os.listdir(directory):
         file_path = os.path.join(directory, the_file)
@@ -42,6 +44,25 @@ def delete_files(directory = "../pics"):
             #elif os.path.isdir(file_path): shutil.rmtree(file_path)
         except Exception, e:
             print e
+
+
+def create_directory(path):
+    """ create directories for saving images"""
+    try:
+        print "Making directory"
+        os.makedirs(path)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
+
+def create_profile_in_database(profile_folder_name, database_path="../face_data/", clean_directory=False):
+    """ Save to the default directory """
+    profile_folder_path = database_path + profile_folder_name + "/"
+    create_directory(profile_folder_path)
+    # Delete all the pictures before recording new
+    if clean_directory: 
+        clean_directory(profile_folder_path) 
+    return profile_folder_path
 
 
 

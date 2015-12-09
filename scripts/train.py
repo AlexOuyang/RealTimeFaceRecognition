@@ -10,6 +10,8 @@ Summary: Used for data colelction and SVM training
 import cv2
 import numpy as np
 from scipy import ndimage
+import sys
+import os
 
 import utils as ut
 
@@ -42,13 +44,23 @@ webcam = cv2.VideoCapture(0)
 ret, frame = webcam.read() # get first frame
 frame_scale = (frame.shape[1]/SCALE_FACTOR,frame.shape[0]/SCALE_FACTOR)  # (y, x)
 
+
 crop_face = []
+num_of_face_to_collect = 150
 num_of_face_saved = 0
 
+
 #  For saving face data to directory
-num_of_face_to_collect = 100
-directory_to_save = "../face_data/Other/"
-ut.delete_files(directory_to_save) # Delete all the pictures before recording new
+profile_folder_path = None
+
+if len(sys.argv) == 1:
+    print "\nError: No Saving Diectory Specified\n"
+    exit()
+elif len(sys.argv) > 2:
+    print "\nError: More Than One Saving Directory Specified\n"
+    exit()
+else: 
+    profile_folder_path = ut.create_profile_in_database(sys.argv[1])
 
 
 while ret:
@@ -113,14 +125,14 @@ while ret:
 
         if faceFound: 
             frame_skip_rate = 0
-            print "Face Found"
+            # print "Face Found"
         else:
             frame_skip_rate = SKIP_FRAME
-            print "Face Not Found"
+            # print "Face Not Found"
 
     else:
         frame_skip_rate -= 1
-        print "Face Not Found"
+        # print "Face Not Found"
 
 
   
@@ -135,7 +147,9 @@ while ret:
         cv2.imshow("Cropped Face", cv2.cvtColor(crop_face, cv2.COLOR_BGR2GRAY))
         if num_of_face_saved < num_of_face_to_collect and key == ord('p'):
             face_to_save = cv2.resize(crop_face, (50, 50), interpolation = cv2.INTER_AREA)
-            cv2.imwrite(directory_to_save+str(num_of_face_saved)+".png", face_to_save)
+            face_name = profile_folder_path+str(num_of_face_saved)+".png"
+            cv2.imwrite(face_name, face_to_save)
+            print "Pic Saved: ", face_name
             num_of_face_saved += 1
 
     # get next frame
