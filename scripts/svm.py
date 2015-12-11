@@ -69,7 +69,8 @@ def test_SVM(face_data, face_target, face_dim, target_names):
 
 
     # clf = SVC(kernel='linear', C=1)
-    # 2387  samples from  37  people are loaded
+    # 2452  samples from  38  people are loaded
+    # Extracting the top 150 eigenfaces from 1839 faces
     # Extracting the top 150 eigenfaces from 1790 faces
     # Train_pca Test Error Rate:  0.0904522613065
     # Train_pca Test Recognition Rate:  0.909547738693
@@ -78,6 +79,10 @@ def test_SVM(face_data, face_target, face_dim, target_names):
     # Train_pca Test Error Rate:  0.201005025126
     # Train_pca Test Recognition Rate:  0.798994974874
 
+    # clf = SVC(kernel='sigmoid')
+    # Train_pca Test Error Rate:  0.985318107667
+    # Train_pca Test Recognition Rate:  0.0146818923328
+    
 
     # clf = SVC(kernel='rbf').fit(X_train, y_train)
     # Train_pca Test Error Rate:  0.0619765494137

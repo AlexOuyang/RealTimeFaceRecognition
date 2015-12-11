@@ -61,7 +61,7 @@ target_names = ["Alex02", "Kristine"]
 # target_names = []
 
 # load YaleDatabaseB
-load_Yale_Exteded_Database(39)
+load_Yale_Exteded_Database(40)
 
 # print target_names
 
@@ -82,7 +82,7 @@ clf, pca = svm.test_SVM(face_data, face_target, FACE_DIM, target_names)
 DISPLAY_FACE_DIM = (200, 200)
 SKIP_FRAME = 2      # the fixed skip frame
 frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
-SCALE_FACTOR = 2 # used to resize the captured frame for face detection for faster processing speed
+SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
 face_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml") #create a cascade classifier
 sideFace_cascade = cv2.CascadeClassifier('../data/haarcascade_profileface.xml')
 
@@ -121,6 +121,9 @@ while ret:
 
     processed_frame = resized_frame
     # Skip a frame if the no face was found last frame
+
+    t0 = time()
+
     if frame_skip_rate == 0:
         faceFound = False
         for rotation in current_rotation_map:
@@ -191,6 +194,9 @@ while ret:
         frame_skip_rate -= 1
         # print "Face Not Found"
 
+
+    # print("\nDetection + Classification took %0.3fs" % (time() - t0))
+    # print "Frame dimension: ", processed_frame.shape
   
     cv2.putText(processed_frame, "Press ESC or 'q' to quit.", (5, 15),
             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255))
