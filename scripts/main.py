@@ -12,10 +12,12 @@ Summary:
         Real time facial tracking and recognition using harrcascade 
         and SVM
 
-To Ignore Warnings: 
-        python main.py
+Usage: 
+        press 'q' or 'ESC' to quit the application
+        
 
-        Created by:  Chenxing Ouyang
+        
+Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
 
 """
 
@@ -41,22 +43,19 @@ print(__doc__)
 FACE_DIM = (50,50) # h = 50, w = 50
 
 # Load training data from face_profiles/
-face_data, face_target, face_profile_names  = ut.load_training_data("../face_profiles/")
+face_profile_data, face_profile_name_index, face_profile_names  = ut.load_training_data("../face_profiles/")
 
-print "\n", face_target.shape[0], " samples from ", len(face_profile_names), " people are loaded"
-for i in range(1,2): print ("\n")
+print "\n", face_profile_name_index.shape[0], " samples from ", len(face_profile_names), " people are loaded"
 
 # Build the classifier
-
-# clf = svm.build_SVC(face_data, face_target, FACE_DIM)
-clf, pca = svm.test_SVM(face_data, face_target, FACE_DIM, face_profile_names)
+clf, pca = svm.build_SVC(face_profile_data, face_profile_name_index, FACE_DIM)
 
 
 ###############################################################################
 # Facial Recognition In Live Tracking
 
 
-DISPLAY_FACE_DIM = (200, 200)
+DISPLAY_FACE_DIM = (200, 200) # the displayed video stream screen dimention 
 SKIP_FRAME = 2      # the fixed skip frame
 frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
 SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
@@ -84,7 +83,7 @@ webcam = cv2.VideoCapture(0)
 ret, frame = webcam.read() # get first frame
 frame_scale = (frame.shape[1]/SCALE_FACTOR,frame.shape[0]/SCALE_FACTOR)  # (y, x)
 
-crop_face = []
+cropped_face = []
 num_of_face_saved = 0
 
 
@@ -98,8 +97,6 @@ while ret:
 
     processed_frame = resized_frame
     # Skip a frame if the no face was found last frame
-
-    t0 = time()
 
     if frame_skip_rate == 0:
         faceFound = False
@@ -136,13 +133,12 @@ while ret:
                 for f in faces:
                     # Crop out the face
                     x, y, w, h = [ v for v in f ] # scale the bounding box back to original frame size
-                    crop_face = rotated_frame[y: y + h, x: x + w]   # img[y: y + h, x: x + w]
-                    crop_face = cv2.resize(crop_face, DISPLAY_FACE_DIM, interpolation = cv2.INTER_AREA)
+                    cropped_face = rotated_frame[y: y + h, x: x + w]   # img[y: y + h, x: x + w]
+                    cropped_face = cv2.resize(cropped_face, DISPLAY_FACE_DIM, interpolation = cv2.INTER_AREA)
 
                     # Name Prediction
-                    face_to_predict = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
+                    face_to_predict = cv2.resize(cropped_face, FACE_DIM, interpolation = cv2.INTER_AREA)
                     face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
-                    face_to_predict = face_to_predict.ravel()
                     name_to_display = svm.predict(clf, pca, face_to_predict, face_profile_names)
 
                     # Display frame
@@ -172,7 +168,6 @@ while ret:
         # print "Face Not Found"
 
 
-    # print("\nDetection + Classification took %0.3fs" % (time() - t0))
     # print "Frame dimension: ", processed_frame.shape
   
     cv2.putText(processed_frame, "Press ESC or 'q' to quit.", (5, 15),
@@ -182,9 +177,9 @@ while ret:
 
 
 
-    if len(crop_face):
-        cv2.imshow("Cropped Face", cv2.cvtColor(crop_face, cv2.COLOR_BGR2GRAY))
-        # face_to_predict = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
+    if len(cropped_face):
+        cv2.imshow("Cropped Face", cv2.cvtColor(cropped_face, cv2.COLOR_BGR2GRAY))
+        # face_to_predict = cv2.resize(cropped_face, FACE_DIM, interpolation = cv2.INTER_AREA)
         # face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
         # name_to_display = svm.predict(clf, pca, face_to_predict, face_profile_names)
     # get next frame

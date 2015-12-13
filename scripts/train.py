@@ -1,9 +1,25 @@
-"""
+""" 
+====================================================
+    Faces recognition and detection using OpenCV 
+====================================================
+
+The dataset used is the Extended Yale Database B Cropped
+
+  http://vision.ucsd.edu/~leekc/ExtYaleDatabase/ExtYaleB.html
+
+
+Summary:
+        Used for face profile data collection in real time 
+        face training for recognition 
+
+Usage: 
+        press and hold 'p' to take pictures continuously once 
+        a cropped face is detected from a pop up window
+
+        press 'q' or 'ESC' to quit the application
+
+        
 Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
-
-This file is part of Cogs 109 Project.
-
-Summary: Used for data colelction and SVM training
 
 """
 
@@ -45,7 +61,7 @@ ret, frame = webcam.read() # get first frame
 frame_scale = (frame.shape[1]/SCALE_FACTOR,frame.shape[0]/SCALE_FACTOR)  # (y, x)
 
 
-crop_face = []
+cropped_face = []
 num_of_face_to_collect = 150
 num_of_face_saved = 0
 
@@ -102,15 +118,15 @@ while ret:
             # for f in faces:
             #     x, y, w, h = [ v*SCALE_FACTOR for v in f ] # scale the bounding box back to original frame size
             #     cv2.rectangle(frame, (x,y), (x+w,y+h), (0,255,0))
-            #     cv2.putText(frame, "DumbAss", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0))
+            #     cv2.putText(frame, "Training Face", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0))
 
             if len(faces):
                 for f in faces:
                     x, y, w, h = [ v for v in f ] # scale the bounding box back to original frame size
-                    crop_face = rotated_frame[y: y + h, x: x + w]   # img[y: y + h, x: x + w]
-                    crop_face = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
+                    cropped_face = rotated_frame[y: y + h, x: x + w]   # img[y: y + h, x: x + w]
+                    cropped_face = cv2.resize(cropped_face, FACE_DIM, interpolation = cv2.INTER_AREA)
                     cv2.rectangle(rotated_frame, (x,y), (x+w,y+h), (0,255,0))
-                    cv2.putText(rotated_frame, "DumbAss", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0))
+                    cv2.putText(rotated_frame, "Training Face", (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0))
 
                 # rotate the frame back and trim the black paddings
                 processed_frame = ut.trim(ut.rotate_image(rotated_frame, rotation * (-1)), frame_scale)
@@ -143,10 +159,10 @@ while ret:
 
 
 
-    if len(crop_face):
-        cv2.imshow("Cropped Face", cv2.cvtColor(crop_face, cv2.COLOR_BGR2GRAY))
+    if len(cropped_face):
+        cv2.imshow("Cropped Face", cv2.cvtColor(cropped_face, cv2.COLOR_BGR2GRAY))
         if num_of_face_saved < num_of_face_to_collect and key == ord('p'):
-            face_to_save = cv2.resize(crop_face, (50, 50), interpolation = cv2.INTER_AREA)
+            face_to_save = cv2.resize(cropped_face, (50, 50), interpolation = cv2.INTER_AREA)
             face_name = profile_folder_path+str(num_of_face_saved)+".png"
             cv2.imwrite(face_name, face_to_save)
             print "Pic Saved: ", face_name

@@ -3,7 +3,7 @@ Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
 
 This file is part of Cogs 109 Project.
 
-Summary: Utilties used for facial tracking in OpenCV and facial recognition in SVM
+Summary: Utilties used for facial tracking in OpenCV 
 
 """
 
@@ -20,58 +20,6 @@ import shutil
 
 ###############################################################################
 # Used For Facial Tracking and Traning in OpenCV
-
-def rotate_image(image, angle, scale = 1.0):
-    """ returns an rotated image with the same dimensions """
-    if angle == 0: return image
-    h, w = image.shape[:2]
-    rot_mat = cv2.getRotationMatrix2D((w/2, h/2), angle, scale)
-    return cv2.warpAffine(image, rot_mat, (w, h), flags=cv2.INTER_LINEAR)
-
-def trim(img, dim):
-    """ dim = (y, x),  img.shape = (x, y) retruns a trimmed image with black paddings removed"""
-    # if the img has the same dimension then do nothing
-    if img.shape[0] == dim[1] and img.shape[1] == dim[0]: return img
-    x = int((img.shape[0] - dim[1])/2) + 1
-    y = int((img.shape[1] - dim[0])/2) + 1
-    trimmed_img = img[x: x + dim[1], y: y + dim[0]]   # crop the image
-    return trimmed_img
-
-def clean_directory(directory = "../pics"):
-    """ Deletes all files and folders contained in the directory """
-    for the_file in os.listdir(directory):
-        file_path = os.path.join(directory, the_file)
-        try:
-            if os.path.isfile(file_path):
-                os.unlink(file_path)
-            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
-        except Exception, e:
-            print e
-
-
-def create_directory(path):
-    """ create directories for saving images"""
-    try:
-        print "Making directory"
-        os.makedirs(path)
-    except OSError as exception:
-        if exception.errno != errno.EEXIST:
-            raise
-
-def create_profile_in_database(profile_folder_name, database_path="../face_data/", clean_directory=False):
-    """ Save to the default directory """
-    profile_folder_path = database_path + profile_folder_name + "/"
-    create_directory(profile_folder_path)
-    # Delete all the pictures before recording new
-    if clean_directory: 
-        clean_directory(profile_folder_path) 
-    return profile_folder_path
-
-
-
-
-###############################################################################
-# Used for Facial Recognition in SVM
 
 def read_images_from_single_face_profile(face_profile, face_profile_name_index, dim = (50, 50)):
     """
@@ -137,7 +85,7 @@ def delete_empty_profile(face_profile_directory):
             if index == 0 : 
                 shutil.rmtree(face_profile)
                 print "\nDeleted ", face_profile, " because it contains no images"
-            if index <= 2 : 
+            if index < 2 : 
                 logging.error("\nFace profile " + str(face_profile) + " contains too little images (At least 2 images are needed)")
 
 
@@ -176,31 +124,140 @@ def load_training_data(face_profile_directory):
     X1, y1 = read_images_from_single_face_profile(first_data_path, 0)
     X_data = X1   
     Y_data = y1   
-
     print "Loading Database: "
-    print 0,"    ", first_data_path
-    for i in range(0, len(face_profile_names)):
+    print 0, "    ",X1.shape[0]," images are loaded from:", first_data_path
+    for i in range(1, len(face_profile_names)):
         directory_name = str(face_profile_names[i])
         directory_path = os.path.join(face_profile_directory, directory_name)
         tempX, tempY = read_images_from_single_face_profile(directory_path, i)
         X_data = np.concatenate((X_data, tempX), axis=0)
         Y_data = np.append(Y_data, tempY)
-
         print i, "    ",tempX.shape[0]," images are loaded from:", directory_path
 
     return X_data, Y_data, face_profile_names
 
 
-def errorRate(pred, actual):
-    """ Returns the error rate """
-    if pred.shape != actual.shape: return None
-    error_rate = np.count_nonzero(pred - actual)/float(pred.shape[0])
-    return error_rate
+def rotate_image(img, rotation, scale = 1.0):
+    """
+    Rotate an image rgb matrix with the same dimensions
 
-def recognitionRate(pred, actual):
-    """ Returns the recognition rate and error rate """
-    if pred.shape != actual.shape: return None
-    error_rate = np.count_nonzero(pred - actual)/float(pred.shape[0])
-    recognitionRate = 1.0 - error_rate
-    return recognitionRate, error_rate
+    Parameters
+    ----------
+    image: string
+        the image rgb matrix
+
+    rotation: int
+        The rotation angle in which the image rotates to
+
+    scale: float
+        The scale multiplier of the rotated image
+
+    Returns
+    -------
+    rot_img : numpy array
+        Rotated image after rotation
+
+    """
+    if rotation == 0: return img
+    h, w = img.shape[:2]
+    rot_mat = cv2.getRotationMatrix2D((w/2, h/2), rotation, scale)
+    rot_img = cv2.warpAffine(img, rot_mat, (w, h), flags=cv2.INTER_LINEAR)
+    return rot_img
+
+def trim(img, dim):
+    """
+    Trim the four sides(black paddings) of the image matrix and crop out the middle with a new dimension
+
+    Parameters
+    ----------
+    img: string
+        the image rgb matrix
+
+    dim: tuple (int, int)
+        The new dimen the image is trimmed to
+
+    Returns
+    -------
+    trimmed_img : numpy array
+        The trimmed image after removing black paddings from four sides
+
+    """
+
+    # if the img has a smaller dimension then return the origin image
+    if dim[1] >= img.shape[0] and dim[0] >= img.shape[1]: return img
+    x = int((img.shape[0] - dim[1])/2) + 1
+    y = int((img.shape[1] - dim[0])/2) + 1
+    trimmed_img = img[x: x + dim[1], y: y + dim[0]]   # crop the image
+    return trimmed_img
+
+
+
+def clean_directory(face_profile):
+    """
+    Deletes all the files in the specified face profile
+
+    Parameters
+    ----------
+    face_profile: string
+        The directory path of a specified face profile
+
+    """
+
+    for the_file in os.listdir(face_profile):
+        file_path = os.path.join(face_profile, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            #elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception, e:
+            print e
+
+
+def create_directory(face_profile):
+    """
+    Create a face profile directory for saving images
+
+    Parameters
+    ----------
+    face_profile: string
+        The directory path of a specified face profile
+
+    """
+    try:
+        print "Making directory"
+        os.makedirs(face_profile)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            print "The specified face profile already existed, it will be override"
+            raise
+
+def create_profile_in_database(face_profile_name, database_path="../face_profile_data/", clean_directory=False):
+    """
+    Create a face profile directory in the database 
+
+    Parameters
+    ----------
+    face_profile_name: string
+        The specified face profile name of a specified face profile folder
+
+    database_path: string
+        Default database directory
+
+    clean_directory: boolean
+        Clean the directory if the user already exists
+
+    Returns
+    -------
+    face_profile_path: string
+        The path of the face profile created
+
+    """
+    face_profile_path = database_path + face_profile_name + "/"
+    create_directory(profile_folder_path)
+    # Delete all the pictures before recording new
+    if clean_directory: 
+        clean_directory(profile_folder_path) 
+    return face_profile_path
+
+
 
