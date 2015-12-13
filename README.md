@@ -1,7 +1,8 @@
 # RealTimeFacialRecognition
 -----------------------------
-Built with Python 2.7, OpenCV, Numpy, Scipy, Stasm.
+Built with Python 2.7, OpenCV2, Numpy, Scipy, scikit-learn, matplotlib.
 
+* note: this application currently only works on Mac because of forward slash in path is incompatible with windows
 
 Summeary
 --------------
@@ -14,11 +15,11 @@ The dataset used is the Extended Yale Face Database B Cropped
 
 Requirements
 --------------
--  Install `OpenCV`_: `Mac installation steps`_
--  ``pip install -r requirements.txt``
+-  Install `OpenCV` on mac: http://www.mobileway.net/2015/02/14/install-opencv-for-python-on-mac-os-x/
+-  To install other dependencies, cd into ./scripts/ then run: ``pip install -r requirements.txt``
 
 
-Use as local command-line utility
+Use as local command-line utilityp
 ---------------------------------
 
 
