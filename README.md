@@ -18,7 +18,7 @@ Requirements
 -  To install other dependencies, cd into ./scripts/ then run: ``pip install -r requirements.txt``
 
 
-Use as local command-line utilityp
+Use as local command-line utility
 ---------------------------------
 
 
