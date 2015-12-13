@@ -3,7 +3,7 @@ Built with Python 2.7, OpenCV2, Numpy, Scipy, scikit-learn, matplotlib.
 
 * note: this application currently only works on Mac because of forward slash in path is incompatible with windows
 
-Summeary
+Summary
 --------------
 Real time facial tracking and recognition using harrcascade and SVM(Radial Basis Function Kernal). Designed SVM classification model using cross-validation and exhaustively grid search, implemented using scikit in python, and trained on Extended Yale Database B. Achieved facial Tracking in OpenCV and optimized Haarcascade to detect up to 45 degrees head tilting. To build the model, 2452  samples from  38  people in the database are splitted into training and testing sets by a ratio of 3:1. The top 150 eigenfaces are extracted from 1839 training faces in the database using Principal Component Analysis (PCA). The principal components are then feeded into the C-SVM Classification model and trained with various kernel tricks. At the end of the recognition task, an accuracy of 93.3% is obtained with the Radial Basis Function (RBF) kernel on the testing set of 613 samples. 
 
