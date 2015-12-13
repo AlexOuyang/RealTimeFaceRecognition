@@ -12,9 +12,19 @@ Summary:
         Used for face profile data collection in real time 
         face training for recognition 
 
-Usage: 
-        press and hold 'p' to take pictures continuously once 
-        a cropped face is detected from a pop up window
+Run:
+    * Training for face recognition using the command below. face_profile_name is the name of the user face profile directory that you want to create in the default ../face_profiles/ folder for storing user face images and training the SVM classification model:
+
+        python train.py [face_profile_name=<the name of the profile folder in database>]
+
+    * Example to create a face profile named David:
+
+        python train.py David
+
+
+Usage during run time:
+
+        press and hold 'p' to take pictures of you continuously once a cropped face is detected from a pop up window. All images are saved under ../face_profiles/face_profile_name
 
         press 'q' or 'ESC' to quit the application
 

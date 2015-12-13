@@ -12,9 +12,22 @@ Summary:
         Real time facial tracking and recognition using harrcascade 
         and SVM
 
+To Run:
+    * To run it without options
+        python main.py
+
+    * Or running with options (By default, scale_multiplier = 4):
+
+        python main.py [scale_multiplier=<full screensize divided by scale_multiplier>]
+
+    * Say you want to run with 1/2 of the full sreen size, specify that scale_multiplier = 4:
+
+        python main.py 4
+
+
 Usage: 
         press 'q' or 'ESC' to quit the application
-        
+
 
         
 Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
@@ -27,11 +40,10 @@ import numpy as np
 from scipy import ndimage
 from time import time
 import matplotlib.pyplot as plt
-
-
 import utils as ut
 import svm
-
+import sys
+import logging
 import warnings
 
 
@@ -62,6 +74,10 @@ SCALE_FACTOR = 4 # used to resize the captured frame for face detection for fast
 face_cascade = cv2.CascadeClassifier("../classifier/haarcascade_frontalface_default.xml") #create a cascade classifier
 sideFace_cascade = cv2.CascadeClassifier('../classifier/haarcascade_profileface.xml')
 
+if len(sys.argv) == 2:
+    SCALE_FACTOR = float(sys.argv[1])
+elif len(sys.argv) >2:
+    logging.error("main.py ")
 # dictionary mapping used to keep track of head rotation maps
 rotation_maps = {
     "left": np.array([-30, 0, 30]),

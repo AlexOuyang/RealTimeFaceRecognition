@@ -29,20 +29,20 @@ Use as local command-line utilityp
 Training For Face Recognition
 -------------------------------
 
-Training for face recognition using the command below. face_profile_name is the name of the user face profile directory that you want to create in the default ../face_profiles/ folder for storing user face images and training the SVM classification model.
+Training for face recognition using the command below. face_profile_name is the name of the user face profile directory that you want to create in the default ../face_profiles/ folder for storing user face images and training the SVM classification model:
 
 
-    python train.py [face_profile_name=<the name of the profile folder in database> ]
+    python train.py [face_profile_name=<the name of the profile folder in database>]
 
 
-Example to create a face profile named David
+Example to create a face profile named David:
 
 
     python train.py David
 
 
 
-Usage during run time
+Usage during run time:
 
 
     press and hold 'p' to take pictures of you continuously once a cropped face is detected from a pop up window. All images are saved under ../face_profiles/face_profile_name
@@ -53,10 +53,21 @@ Usage during run time
 Running Face Recognition In Real Time
 --------------------------------------
 
-Running the program in real time to recognize faces. 
+Running the program in real time to recognize faces:
 
 
     python main.py
+
+
+Or running with options (By default, scale_multiplier = 4):
+
+
+    python main.py [scale_multiplier=<full screensize divided by scale_multiplier>]
+
+
+Say you want to run with 1/2 of the full sreen size, specify that scale_multiplier = 4:
+
+    python main.py 4
 
 
 
