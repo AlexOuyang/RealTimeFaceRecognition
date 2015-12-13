@@ -13,7 +13,7 @@ Summary:
         and SVM
 
 To Ignore Warnings: 
-        python -W ignore main.py
+        python main.py
 
         Created by:  Chenxing Ouyang
 
@@ -24,7 +24,6 @@ import os
 import numpy as np
 from scipy import ndimage
 from time import time
-import logging
 import matplotlib.pyplot as plt
 
 
@@ -39,52 +38,30 @@ print(__doc__)
 ###############################################################################
 # Building SVC from database
 
-# Used to load data bases
-def load_Yale_Exteded_Database(number_of_Faces):
-    for i in range (1, number_of_Faces):
-        missing_database = [14]
-        name_prefix = "yaleB"
-        if i < 10:
-            name_index = "0" + str(i)
-        else:
-            name_index = str(i)
-        name = name_prefix + name_index
-        if i in missing_database:
-            print "Missing Database: ", name
-        else:
-            target_names.append(name)
-
-
 FACE_DIM = (50,50) # h = 50, w = 50
 
-target_names = ["Alex02", "Kristine"]
-# target_names = []
+# Load training data from face_profiles/
+face_data, face_target, face_profile_names  = ut.load_training_data("../face_profiles/")
 
-# load YaleDatabaseB
-load_Yale_Exteded_Database(40)
-
-# print target_names
-
-# Build the classifier
-face_data, face_target = ut.load_data(target_names, data_directory = "../face_data/")
-
-print face_target.shape[0], " samples from ", len(target_names), " people are loaded"
+print "\n", face_target.shape[0], " samples from ", len(face_profile_names), " people are loaded"
 for i in range(1,2): print ("\n")
 
+# Build the classifier
+
 # clf = svm.build_SVC(face_data, face_target, FACE_DIM)
-clf, pca = svm.test_SVM(face_data, face_target, FACE_DIM, target_names)
+clf, pca = svm.test_SVM(face_data, face_target, FACE_DIM, face_profile_names)
 
 
 ###############################################################################
-# Facial Recognition and Tracking Live
+# Facial Recognition In Live Tracking
 
 
 DISPLAY_FACE_DIM = (200, 200)
 SKIP_FRAME = 2      # the fixed skip frame
 frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
 SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
-face_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml") #create a cascade classifier
-sideFace_cascade = cv2.CascadeClassifier('../data/haarcascade_profileface.xml')
+face_cascade = cv2.CascadeClassifier("../classifier/haarcascade_frontalface_default.xml") #create a cascade classifier
+sideFace_cascade = cv2.CascadeClassifier('../classifier/haarcascade_profileface.xml')
 
 # dictionary mapping used to keep track of head rotation maps
 rotation_maps = {
@@ -166,7 +143,7 @@ while ret:
                     face_to_predict = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
                     face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
                     face_to_predict = face_to_predict.ravel()
-                    name_to_display = svm.predict(clf, pca, face_to_predict, target_names)
+                    name_to_display = svm.predict(clf, pca, face_to_predict, face_profile_names)
 
                     # Display frame
                     cv2.rectangle(rotated_frame, (x,y), (x+w,y+h), (0,255,0))
@@ -209,7 +186,7 @@ while ret:
         cv2.imshow("Cropped Face", cv2.cvtColor(crop_face, cv2.COLOR_BGR2GRAY))
         # face_to_predict = cv2.resize(crop_face, FACE_DIM, interpolation = cv2.INTER_AREA)
         # face_to_predict = cv2.cvtColor(face_to_predict, cv2.COLOR_BGR2GRAY)
-        # name_to_display = svm.predict(clf, pca, face_to_predict, target_names)
+        # name_to_display = svm.predict(clf, pca, face_to_predict, face_profile_names)
     # get next frame
     ret, frame = webcam.read()
 
