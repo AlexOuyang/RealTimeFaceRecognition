@@ -44,7 +44,8 @@ Example to create a face profile named David:
 Usage during run time:
 
 
-    press and hold 'p' to take pictures of you continuously once a cropped face is detected from a pop up window. All images are saved under ../face_profiles/face_profile_name
+    press and hold 'p' to take pictures of you continuously once a cropped face is detected from a 
+    pop up window. All images are saved under ../face_profiles/face_profile_name
 
     press 'q' or 'ESC' to quit the application
 
