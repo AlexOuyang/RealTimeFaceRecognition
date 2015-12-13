@@ -1,5 +1,4 @@
 # RealTimeFacialRecognition
------------------------------
 Built with Python 2.7, OpenCV2, Numpy, Scipy, scikit-learn, matplotlib.
 
 * note: this application currently only works on Mac because of forward slash in path is incompatible with windows
