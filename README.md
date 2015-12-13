@@ -1,7 +1,7 @@
 # RealTimeFacialRecognition
-============
-
+-----------------------------
 Built with Python 2.7, OpenCV, Numpy, Scipy, Stasm.
+
 
 Summeary
 --------------
@@ -17,25 +17,25 @@ Requirements
 -  Install `OpenCV`_: `Mac installation steps`_
 -  ``pip install -r requirements.txt``
 
+
 Use as local command-line utility
 ---------------------------------
-::
+
 
     $ git clone https://github.com/AlexOuyang/RealTimeFacialRecognition.git
+
 
 Training For Face Recognition
 -------------------------------
 
 Training for face recognition using the command below. face_profile_name is the name of the user face profile directory that you want to create in the default ../face_profiles/ folder for storing user face images and training the SVM classification model.
 
-::
 
     python train.py [face_profile_name=<the name of the profile folder in database> ]
 
 
 Example to create a face profile named David
 
-::
 
     python train.py David
 
@@ -43,7 +43,7 @@ Example to create a face profile named David
 
 Usage during run time
 
-::
+
     press and hold 'p' to take pictures of you continuously once a cropped face is detected from a pop up window. All images are saved under ../face_profiles/face_profile_name
 
     press 'q' or 'ESC' to quit the application
@@ -54,7 +54,6 @@ Running Face Recognition In Real Time
 
 Running the program in real time to recognize faces. 
 
-::
 
     python main.py
 
