@@ -22,7 +22,7 @@ Use as local command-line utility
 ---------------------------------
 
 
-    $ git clone https://github.com/AlexOuyang/RealTimeFacialRecognition.git
+    $ git clone https://github.com/AlexOuyang/RealTimeFaceRecognition.git
 
 
 Training For Face Recognition
