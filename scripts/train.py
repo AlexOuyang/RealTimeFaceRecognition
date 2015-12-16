@@ -46,8 +46,8 @@ FACE_DIM = (200, 200)
 SKIP_FRAME = 2      # the fixed skip frame
 frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
 SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
-face_cascade = cv2.CascadeClassifier("../data/haarcascade_frontalface_default.xml") #create a cascade classifier
-sideFace_cascade = cv2.CascadeClassifier('../data/haarcascade_profileface.xml')
+face_cascade = cv2.CascadeClassifier("../classifier/haarcascade_frontalface_default.xml") #create a cascade classifier
+sideFace_cascade = cv2.CascadeClassifier('../classifier/haarcascade_profileface.xml')
 
 # dictionary mapping used to keep track of head rotation maps
 rotation_maps = {

@@ -231,7 +231,7 @@ def create_directory(face_profile):
             print "The specified face profile already existed, it will be override"
             raise
 
-def create_profile_in_database(face_profile_name, database_path="../face_profile_data/", clean_directory=False):
+def create_profile_in_database(face_profile_name, database_path="../face_profiles/", clean_directory=False):
     """
     Create a face profile directory in the database 
 
@@ -253,10 +253,10 @@ def create_profile_in_database(face_profile_name, database_path="../face_profile
 
     """
     face_profile_path = database_path + face_profile_name + "/"
-    create_directory(profile_folder_path)
+    create_directory(face_profile_path)
     # Delete all the pictures before recording new
     if clean_directory: 
-        clean_directory(profile_folder_path) 
+        clean_directory(face_profile_path) 
     return face_profile_path
 
 
