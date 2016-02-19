@@ -12,20 +12,6 @@ The dataset used is the Extended Yale Face Database B Cropped
   http://vision.ucsd.edu/~leekc/ExtYaleDatabase/ExtYaleB.html
 
 
-Top 12 Eigenfaces generated from the Extended Yale Database B
---------------
-  ![alt text](https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_eigen.png "Top 12 Eigenfaces generated from the Extended Yale Database B")
-
-
-Top 12 Predictions
---------------
-  ![alt text](https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_predict.png "Top 12 Predictions")
-
-
-Prediction of User Face
---------------
-  ![alt text](https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_sad.png "Prediction of User Face")
-
 
 Requirements
 --------------
@@ -86,4 +72,20 @@ Say you want to run with 1/2 of the full sreen size, specify that scale_multipli
 
 
 
-Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
+Top 12 Eigenfaces generated from the Extended Yale Database B
+--------------
+  ![alt text](https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_eigen.png "Top 12 Eigenfaces generated from the Extended Yale Database B")
+
+
+Top 12 Predictions
+--------------
+  ![alt text](https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_predict.png "Top 12 Predictions")
+
+
+Prediction of User Face
+--------------
+  ![alt text](https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_sad.png "Prediction of User Face")
+
+
+
+Auther: Alex Chenxing Ouyang <c2ouyang@ucsd.edu>
