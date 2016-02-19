@@ -10,7 +10,15 @@ Real time facial tracking and recognition using harrcascade and SVM(Radial Basis
 The dataset used is the Extended Yale Face Database B Cropped
 
   http://vision.ucsd.edu/~leekc/ExtYaleDatabase/ExtYaleB.html
+  
+Top 12 Eigenfaces generated from the Extended Yale Database B
+<img src="https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_eigen.png" align="left" height="256" width="256" >
 
+Top 12 Predictions
+<img src="https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_predict.png" align="left" height="500" width="500" >
+
+Prediction of my face
+<img src="https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_sad.png" align="left">
 
 Requirements
 --------------
