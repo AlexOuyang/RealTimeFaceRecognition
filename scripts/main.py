@@ -1,6 +1,6 @@
-""" 
+"""
 ====================================================
-    Faces recognition and detection using OpenCV 
+    Faces recognition and detection using OpenCV
 ====================================================
 
 The dataset used is the Extended Yale Database B Cropped
@@ -9,7 +9,7 @@ The dataset used is the Extended Yale Database B Cropped
 
 
 Summary:
-        Real time facial tracking and recognition using harrcascade 
+        Real time facial tracking and recognition using harrcascade
         and SVM
 
 To Run:
@@ -25,11 +25,11 @@ To Run:
         python main.py 4
 
 
-Usage: 
+Usage:
         press 'q' or 'ESC' to quit the application
 
 
-        
+
 Auther: Chenxing Ouyang <c2ouyang@ucsd.edu>
 
 """
@@ -67,7 +67,7 @@ clf, pca = svm.build_SVC(face_profile_data, face_profile_name_index, FACE_DIM)
 # Facial Recognition In Live Tracking
 
 
-DISPLAY_FACE_DIM = (200, 200) # the displayed video stream screen dimention 
+DISPLAY_FACE_DIM = (200, 200) # the displayed video stream screen dimention
 SKIP_FRAME = 2      # the fixed skip frame
 frame_skip_rate = 0 # skip SKIP_FRAME frames every other frame
 SCALE_FACTOR = 4 # used to resize the captured frame for face detection for faster processing speed
@@ -91,13 +91,13 @@ def get_rotation_map(rotation):
     if rotation < 0: return rotation_maps.get("left", None)
     if rotation == 0: return rotation_maps.get("middle", None)
 
-current_rotation_map = get_rotation_map(0) 
+current_rotation_map = get_rotation_map(0)
 
 
 webcam = cv2.VideoCapture(0)
 
 ret, frame = webcam.read() # get first frame
-frame_scale = (frame.shape[1]/SCALE_FACTOR,frame.shape[0]/SCALE_FACTOR)  # (y, x)
+frame_scale = (int(frame.shape[1]/SCALE_FACTOR),int(frame.shape[0]/SCALE_FACTOR))  # (y, x)
 
 cropped_face = []
 num_of_face_saved = 0
@@ -106,7 +106,7 @@ num_of_face_saved = 0
 while ret:
     key = cv2.waitKey(1)
     # exit on 'q' 'esc' 'Q'
-    if key in [27, ord('Q'), ord('q')]: 
+    if key in [27, ord('Q'), ord('q')]:
         break
     # resize the captured frame for face detection to increase processing speed
     resized_frame = cv2.resize(frame, frame_scale)
@@ -128,16 +128,16 @@ while ret:
                 scaleFactor=1.3,
                 minNeighbors=5,
                 minSize=(30, 30),
-                flags=cv2.cv.CV_HAAR_SCALE_IMAGE
-            ) 
+                flags=cv2.CASCADE_SCALE_IMAGE
+            )
 
             # If frontal face detector failed, use profileface detector
-            faces = faces if len(faces) else sideFace_cascade.detectMultiScale(                
+            faces = faces if len(faces) else sideFace_cascade.detectMultiScale(
                 gray,
                 scaleFactor=1.3,
                 minNeighbors=5,
                 minSize=(30, 30),
-                flags=cv2.cv.CV_HAAR_SCALE_IMAGE
+                flags=cv2.CASCADE_SCALE_IMAGE
             )
 
             # for f in faces:
@@ -172,7 +172,7 @@ while ret:
 
                 break
 
-        if faceFound: 
+        if faceFound:
             frame_skip_rate = 0
             # print ("Face Found")
         else:
@@ -185,7 +185,7 @@ while ret:
 
 
     # print "Frame dimension: ", processed_frame.shape
-  
+
     cv2.putText(processed_frame, "Press ESC or 'q' to quit.", (5, 15),
             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255))
 
