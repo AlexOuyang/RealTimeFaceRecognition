@@ -57,6 +57,7 @@ FACE_DIM = (50,50) # h = 50, w = 50
 # Load training data from face_profiles/
 face_profile_data, face_profile_name_index, face_profile_names  = ut.load_training_data("../face_profiles/")
 
+print ("\n", face_profile_name_index.shape[0], " samples from ", len(face_profile_names), " people are loaded")
 
 # Build the classifier
 clf, pca = svm.build_SVC(face_profile_data, face_profile_name_index, FACE_DIM)
@@ -173,14 +174,14 @@ while ret:
 
         if faceFound:
             frame_skip_rate = 0
-            # print "Face Found"
+            # print ("Face Found")
         else:
             frame_skip_rate = SKIP_FRAME
-            # print "Face Not Found"
+            # print ("Face Not Found")
 
     else:
         frame_skip_rate -= 1
-        # print "Face Not Found"
+        # print ("Face Not Found")
 
 
     # print "Frame dimension: ", processed_frame.shape
