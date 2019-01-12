@@ -82,10 +82,4 @@ Top 12 Predictions
   ![alt text](https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_predict.png "Top 12 Predictions")
 
 
-Prediction of User Face
---------------
-  ![alt text](https://raw.githubusercontent.com/AlexOuyang/RealTimeFaceRecognition/master/screenshots/face_sad.png "Prediction of User Face")
-
-
-
 Auther: Alex Chenxing Ouyang <c2ouyang@ucsd.edu>
